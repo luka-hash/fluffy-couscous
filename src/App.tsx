@@ -57,7 +57,14 @@ function WordCounter({ text }: { text: string }) {
 }
 
 function App() {
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>(() => {
+    const storetext = localStorage.getItem('text');
+    return storetext ? storetext : '';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('text', text);
+  }, [text]);
 
   return (
     <div className="relative">
