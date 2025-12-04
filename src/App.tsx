@@ -68,6 +68,18 @@ function App() {
         onChange={(e) => {
           setText(e.target.value);
         }}
+        onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            const idx = e.currentTarget.selectionStart;
+            if (idx !== null) {
+              const front = text.slice(0, idx);
+              const back = text.slice(idx);
+              setText(front + '    ' + back);
+              e.currentTarget.setSelectionRange(idx + 4, idx + 4);
+            }
+          }
+        }}
         className="w-[600px] h-[400px] p-4 border border-gray-300 rounded-md focus:outline-none"
         value={text}
       />
