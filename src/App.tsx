@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function countWords(
@@ -11,8 +11,51 @@ function countWords(
 }
 
 function WordCounter({ text }: { text: string }) {
-  const count = countWords(text);
-  return <div className="absolute bottom-2 right-2">{count} words, ~{Math.round(count / 180)} minutes</div>;
+  const [wordsPerMinute, setWordsPerMinute] = useState<number>(180);
+  const [showConfig, setShowConfig] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   const storedWordsPerMinute = localStorage.getItem("wordsPerMinute");
+  //   if (storedWordsPerMinute) {
+  //     setWordsPerMinute(Number(storedWordsPerMinute));
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    (() => {
+      const storedWordsPerMinute = localStorage.getItem("wordsPerMinute");
+      if (storedWordsPerMinute) {
+        setWordsPerMinute(Number(storedWordsPerMinute));
+      }
+    })();
+
+  }, [wordsPerMinute]);
+
+  const numWords = countWords(text);
+  return (
+    <div className="absolute bottom-2 right-2">
+      <span>{numWords} words</span>,
+      <span>
+        ~{Math.round(numWords / wordsPerMinute)} minutes
+        <span onClick={() => setShowConfig(!showConfig)}>⚙️</span>
+      </span>
+      {showConfig && (
+        <div className="inline">
+          <input
+            type="range"
+            min={50}
+            max={600}
+            value={wordsPerMinute}
+            onChange={(e) => {
+              setWordsPerMinute(Number(e.target.value));
+              localStorage.setItem("wordsPerMinute", e.target.value.toString());
+            }}
+          />
+          <span>{wordsPerMinute}</span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function App() {
