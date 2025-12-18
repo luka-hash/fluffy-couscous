@@ -37,6 +37,14 @@ function App() {
         value={text}
       />
       <WordCounter text={text} />
+
+      <footer className="mt-10 flex flex-col justify-center items-center">
+        <div>
+          Made with <span title="love">❤️</span>.
+        </div>
+        <div>Copyright © 2025-{new Date().getFullYear()}</div>
+        <div>Luka Ivanović</div>
+      </footer>
     </div>
   );
 }
